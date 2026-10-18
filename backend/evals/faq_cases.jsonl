@@ -1,0 +1,30 @@
+{"id": "f01", "question": "dora pare to kya karna chahiye?", "expect": "first-aid"}
+{"id": "f02", "text_lang": "ur", "question": "جب دورہ پڑ رہا ہو تو ہم کیا کریں؟", "expect": "first-aid"}
+{"id": "f03", "question": "should I put a spoon in his mouth during a fit?", "expect": "first-aid"}
+{"id": "f04", "question": "kab hospital le kar jana zaroori hai", "expect": "emergency"}
+{"id": "f05", "question": "When do I need to call an ambulance?", "expect": "emergency"}
+{"id": "f06", "question": "ہونٹ نیلے ہو جائیں تو کیا ایمرجنسی جائیں؟", "expect": "emergency"}
+{"id": "f07", "question": "dore ke baad wo bohat sota hai, kya ye normal hai?", "expect": "after-seizure"}
+{"id": "f08", "question": "after the seizure she is confused for a while, is that ok", "expect": "after-seizure"}
+{"id": "f09", "question": "6 mahine se dora nahi para, kya dawai chhor sakte hain?", "expect": "stopping-medicine"}
+{"id": "f10", "question": "Can we stop the medicine now that the fits have stopped?", "expect": "stopping-medicine"}
+{"id": "f11", "question": "دوائی کم کر سکتے ہیں؟ دورے بند ہو گئے ہیں", "expect": "stopping-medicine"}
+{"id": "f12", "question": "dawai ke baad bacha bohat chirchira ho gaya hai", "expect": "side-effects"}
+{"id": "f13", "question": "the medicine makes him very sleepy all day", "expect": "side-effects"}
+{"id": "f14", "question": "jild par daane nikal aaye hain dawai shuru karne ke baad", "expect": "side-effects"}
+{"id": "f15", "question": "kya cough syrup de sakte hain saath mein?", "expect": "other-medicines"}
+{"id": "f16", "question": "Can I give him homeopathic medicine along with this?", "expect": "other-medicines"}
+{"id": "f17", "question": "kya desi totka ya dum karwa sakte hain?", "expect": "other-medicines"}
+{"id": "f18", "question": "kitni neend zaroori hai, kya mobile se dora parta hai", "expect": "sleep-screens"}
+{"id": "f19", "question": "Is screen time / video games dangerous for seizures?", "expect": "sleep-screens"}
+{"id": "f20", "question": "kya dore ki video bana lun doctor ke liye?", "expect": "video"}
+{"id": "f21", "question": "Should I film the seizure on my phone?", "expect": "video"}
+{"id": "f22", "question": "dose miss ho gayi, ab kya karun?", "expect": null}
+{"id": "f23", "question": "dawai ke baad ulti ho gayi, dobara dun?", "expect": null}
+{"id": "f24", "question": "bukhar mein kaunsi dawai dun?", "expect": null}
+{"id": "f25", "question": "kya wo school ja sakta hai?", "expect": null}
+{"id": "f26", "question": "agle hafte appointment kab hai?", "expect": null}
+{"id": "f27", "question": "kya bache ko vaccine lagwa sakte hain?", "expect": null}
+{"id": "f28", "question": "What foods should he avoid?", "expect": null}
+{"id": "f29", "question": "kya hum hawai jahaz mein safar kar sakte hain?", "expect": null}
+{"id": "f30", "question": "Doctor sahab ki fees kitni hai?", "expect": null}

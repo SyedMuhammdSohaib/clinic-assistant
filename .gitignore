@@ -1,0 +1,29 @@
+# Secrets and local settings: never commit
+.env
+.env.*
+!.env.example
+!.env.local.example
+run-backend.bat
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+
+# Uploaded prescription photos and local eval runs
+uploads/
+backend/uploads/
+backend/evals/reports/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

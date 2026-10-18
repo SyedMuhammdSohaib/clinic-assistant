@@ -1,0 +1,106 @@
+[
+  {
+    "topic": "first-aid",
+    "published": true,
+    "question_en": "What should I do during a seizure?",
+    "question_ur": "دورہ پڑے تو اس وقت کیا کریں؟",
+    "answer_en": "Stay calm and note the time it started. Lay your child on their side on a safe surface, away from hard or sharp objects, with something soft under the head. Loosen tight clothing around the neck. Do not hold them down and do not put anything in their mouth, not even water or medicine. Stay with them until they are fully awake. If it lasts 5 minutes or longer, go to the emergency room.",
+    "answer_ur": "گھبرائیں نہیں اور دورہ شروع ہونے کا وقت نوٹ کریں۔ بچے کو کسی محفوظ جگہ پر کروٹ کے بل لٹائیں، سخت یا نوکیلی چیزوں سے دور، اور سر کے نیچے کوئی نرم چیز رکھیں۔ گلے کے گرد تنگ کپڑے ڈھیلے کر دیں۔ بچے کو زبردستی نہ پکڑیں اور اس کے منہ میں کچھ نہ ڈالیں، نہ پانی نہ دوائی۔ جب تک بچہ پوری طرح ہوش میں نہ آ جائے، اس کے پاس رہیں۔ اگر دورہ 5 منٹ یا اس سے زیادہ چلے تو فوراً ایمرجنسی جائیں۔"
+  },
+  {
+    "topic": "emergency",
+    "published": true,
+    "question_en": "When must I go to the emergency room?",
+    "question_ur": "فوراً ایمرجنسی کب جانا ہے؟",
+    "answer_en": "Go to the nearest emergency room, or call Rescue 1122, if any of these happen:\n- The seizure lasts 5 minutes or longer.\n- Another seizure starts before your child wakes up from the first.\n- Your child has trouble breathing, or the lips or face turn blue.\n- Your child does not wake up after the seizure.\n- Your child was hurt during the seizure, or it happened in water.",
+    "answer_ur": "ان میں سے کچھ بھی ہو تو قریبی ایمرجنسی جائیں یا ریسکیو 1122 پر کال کریں:\n- دورہ 5 منٹ یا اس سے زیادہ چلے۔\n- بچہ پہلے دورے سے ہوش میں آنے سے پہلے دوسرا دورہ شروع ہو جائے۔\n- بچے کو سانس لینے میں مشکل ہو، یا ہونٹ یا چہرہ نیلا پڑ جائے۔\n- دورے کے بعد بچہ ہوش میں نہ آئے۔\n- دورے میں بچے کو چوٹ لگی ہو، یا دورہ پانی میں پڑا ہو۔"
+  },
+  {
+    "topic": "after-seizure",
+    "published": true,
+    "question_en": "Why is my child sleepy or confused after a seizure?",
+    "question_ur": "دورے کے بعد بچہ سست یا نیند میں کیوں ہے؟",
+    "answer_en": "After a seizure it is common for a child to be sleepy, confused or to have a headache for a few hours. Let them rest on their side and stay nearby. They should slowly return to normal. If they do not wake up, or if weakness on one side of the body or trouble speaking does not go away, go to the emergency room.",
+    "answer_ur": "دورے کے بعد بچے کا کچھ گھنٹے سست رہنا، نیند میں ہونا، الجھن یا سر درد ہونا عام بات ہے۔ اسے کروٹ کے بل آرام کرنے دیں اور پاس رہیں۔ بچہ آہستہ آہستہ ٹھیک ہو جانا چاہیے۔ اگر وہ ہوش میں نہ آئے، یا جسم کے ایک طرف کمزوری یا بولنے میں مشکل ختم نہ ہو، تو ایمرجنسی جائیں۔"
+  },
+  {
+    "topic": "missed-dose",
+    "published": false,
+    "question_en": "What if a dose is missed?",
+    "question_ur": "خوراک چھوٹ جائے تو کیا کریں؟",
+    "answer_en": "Do not give a double dose to make up for it unless your doctor told you to. [Doctor: your rule]. Log the missed dose in the app so your doctor can see it.",
+    "answer_ur": "ڈاکٹر کی ہدایت کے بغیر دوگنی خوراک نہ دیں۔ [ڈاکٹر: آپ کی ہدایت]۔ چھوٹی ہوئی خوراک ایپ میں ضرور درج کریں تاکہ ڈاکٹر اسے دیکھ سکیں۔"
+  },
+  {
+    "topic": "vomited-dose",
+    "published": false,
+    "question_en": "What if my child vomits after the medicine?",
+    "question_ur": "دوائی دینے کے بعد الٹی ہو جائے تو؟",
+    "answer_en": "[Doctor: your rule]. If your child keeps vomiting and cannot keep the medicine down, contact the clinic the same day. Log it in the app as \"vomited\".",
+    "answer_ur": "[ڈاکٹر: آپ کی ہدایت]۔ اگر بچہ بار بار الٹی کرے اور دوائی پیٹ میں نہ رکے تو اسی دن کلینک سے رابطہ کریں۔ ایپ میں اسے \"الٹی\" کے طور پر درج کریں۔"
+  },
+  {
+    "topic": "stopping-medicine",
+    "published": true,
+    "question_en": "The seizures have stopped. Can we stop the medicine?",
+    "question_ur": "دورے رک گئے ہیں، کیا دوائی بند کر دیں؟",
+    "answer_en": "No. Never stop or reduce a seizure medicine on your own, even if there have been no seizures for a long time. Stopping suddenly can bring seizures back, sometimes worse than before. Only your doctor can decide when and how to reduce it, usually slowly over weeks.",
+    "answer_ur": "نہیں۔ دورے کی دوائی کبھی خود سے بند یا کم نہ کریں، چاہے کافی عرصے سے دورہ نہ پڑا ہو۔ اچانک دوائی بند کرنے سے دورے دوبارہ آ سکتے ہیں، بعض اوقات پہلے سے زیادہ شدید۔ دوائی کب اور کیسے کم کرنی ہے، یہ صرف آپ کے ڈاکٹر طے کریں گے۔"
+  },
+  {
+    "topic": "rescue-medicine",
+    "published": false,
+    "question_en": "Is there an emergency medicine to give at home?",
+    "question_ur": "گھر پر دینے والی ایمرجنسی دوائی",
+    "answer_en": "[Doctor: rescue medicine instructions]. If no rescue medicine has been prescribed, follow the first aid steps and go to the emergency room if the seizure lasts 5 minutes or longer.",
+    "answer_ur": "[ڈاکٹر: ریسکیو دوائی کی ہدایات]۔ اگر کوئی ریسکیو دوائی نہیں لکھی گئی تو ابتدائی طبی امداد کے طریقے پر عمل کریں اور دورہ 5 منٹ یا اس سے زیادہ چلے تو ایمرجنسی جائیں۔"
+  },
+  {
+    "topic": "fever",
+    "published": false,
+    "question_en": "My child has a fever. What should I do?",
+    "question_ur": "بچے کو بخار ہے، کیا کریں؟",
+    "answer_en": "Fever can make seizures more likely, so keep giving the seizure medicine on time. Give fever medicine only as your doctor advised: [Doctor: which medicine and dose]. Give plenty of fluids and let them rest. Contact the clinic if the fever lasts more than [Doctor: ___ days]. Go to the emergency room if a seizure happens, or if your child is very drowsy, has a stiff neck, or has a new rash with the fever.",
+    "answer_ur": "بخار میں دورے کا خطرہ بڑھ سکتا ہے، اس لیے دورے کی دوائی وقت پر دیتے رہیں۔ بخار کی دوائی صرف ڈاکٹر کی ہدایت کے مطابق دیں: [ڈاکٹر: دوائی اور خوراک]۔ پانی اور مشروبات زیادہ دیں اور آرام کروائیں۔ اگر بخار [ڈاکٹر: ___ دن] سے زیادہ رہے تو کلینک سے رابطہ کریں۔ اگر دورہ پڑے، یا بچہ بہت زیادہ غنودگی میں ہو، گردن اکڑ جائے، یا بخار کے ساتھ نیا دانہ نکلے، تو ایمرجنسی جائیں۔"
+  },
+  {
+    "topic": "side-effects",
+    "published": true,
+    "question_en": "The medicine makes my child sleepy or irritable",
+    "question_ur": "دوائی سے بچہ سست یا چڑچڑا ہو گیا ہے",
+    "answer_en": "Some seizure medicines can cause sleepiness, tiredness or mood changes, especially in the first weeks or after a dose change. Do not stop the medicine. Write what you notice in the app so your doctor can review it. Contact the clinic the same day, or go to the emergency room, if your child gets a skin rash, blisters or sores in the mouth, yellow eyes or skin, unusual bruising, or keeps vomiting.",
+    "answer_ur": "دورے کی کچھ دوائیوں سے غنودگی، تھکاوٹ یا مزاج میں تبدیلی آ سکتی ہے، خاص طور پر شروع کے ہفتوں میں یا خوراک بدلنے کے بعد۔ دوائی بند نہ کریں۔ جو دیکھیں وہ ایپ میں لکھ دیں تاکہ ڈاکٹر دیکھ سکیں۔ اگر جلد پر دانے، منہ میں چھالے یا زخم، آنکھوں یا جلد کا پیلا پن، غیر معمولی نیل پڑنا، یا بار بار الٹی ہو تو اسی دن کلینک سے رابطہ کریں یا ایمرجنسی جائیں۔"
+  },
+  {
+    "topic": "other-medicines",
+    "published": true,
+    "question_en": "Can I give other medicines or home remedies?",
+    "question_ur": "کیا ساتھ میں کوئی اور دوائی یا دیسی ٹوٹکا دے سکتے ہیں؟",
+    "answer_en": "Ask your doctor before giving any new medicine, including medicines from the pharmacy, cough syrups, herbal or homeopathic remedies. Some of them can change how the seizure medicine works or make seizures more likely. Home remedies must never replace the prescribed medicine.",
+    "answer_ur": "کوئی بھی نئی دوائی دینے سے پہلے ڈاکٹر سے پوچھیں، چاہے وہ میڈیکل اسٹور سے لی گئی ہو، کھانسی کا شربت ہو، یا جڑی بوٹی اور ہومیوپیتھک دوائی۔ ان میں سے کچھ دورے کی دوائی کے اثر کو بدل سکتی ہیں یا دورے کا خطرہ بڑھا سکتی ہیں۔ دیسی ٹوٹکے کبھی بھی لکھی ہوئی دوائی کی جگہ نہ لیں۔"
+  },
+  {
+    "topic": "school-play",
+    "published": false,
+    "question_en": "Can my child go to school and play?",
+    "question_ur": "کیا بچہ اسکول جا سکتا ہے اور کھیل سکتا ہے؟",
+    "answer_en": "Most children with seizures can go to school and play normally. [Doctor: any limits]. Tell the teacher about the seizures and share the first aid steps. For safety, an adult should always watch closely during swimming and bathing, and your child should wear a helmet when cycling. Avoid climbing high places until your doctor says it is safe.",
+    "answer_ur": "دورے والے زیادہ تر بچے اسکول جا سکتے ہیں اور عام طرح کھیل سکتے ہیں۔ [ڈاکٹر: اگر کوئی پابندی ہو]۔ استاد کو دوروں کے بارے میں بتائیں اور ابتدائی طبی امداد کا طریقہ ان کے ساتھ شیئر کریں۔ تیرنے اور نہانے کے دوران کوئی بڑا ہر وقت ساتھ اور نظر رکھے، اور سائیکل چلاتے وقت ہیلمٹ پہنائیں۔ جب تک ڈاکٹر اجازت نہ دیں، اونچی جگہوں پر چڑھنے سے گریز کریں۔"
+  },
+  {
+    "topic": "sleep-screens",
+    "published": true,
+    "question_en": "Do sleep and mobile/TV matter?",
+    "question_ur": "نیند اور موبائل یا ٹی وی کا کیا اثر ہے؟",
+    "answer_en": "Too little sleep is one of the most common triggers of seizures. Keep a regular bedtime and wake-up time, including weekends. For most children screens are safe. A small number of children have seizures set off by flashing lights; if you notice this, tell your doctor.",
+    "answer_ur": "نیند کی کمی دوروں کی سب سے عام وجوہات میں سے ایک ہے۔ سونے اور جاگنے کا وقت روزانہ ایک جیسا رکھیں، چھٹی کے دن بھی۔ زیادہ تر بچوں کے لیے موبائل اور ٹی وی محفوظ ہیں۔ بہت کم بچوں میں چمکتی روشنی سے دورہ پڑتا ہے؛ اگر آپ کو ایسا لگے تو ڈاکٹر کو بتائیں۔"
+  },
+  {
+    "topic": "video",
+    "published": true,
+    "question_en": "Should I record the seizure on video?",
+    "question_ur": "کیا دورے کی ویڈیو بنا لیں؟",
+    "answer_en": "Yes, if it is safe to do so, and only after your child is safe. A short video helps the doctor understand the type of seizure. Try to show the whole body and the face, and note the start and end time. Show it to the doctor at the next visit.",
+    "answer_ur": "جی ہاں، اگر ممکن ہو، لیکن پہلے بچے کو محفوظ کریں۔ چھوٹی سی ویڈیو سے ڈاکٹر کو دورے کی قسم سمجھنے میں مدد ملتی ہے۔ کوشش کریں کہ پورا جسم اور چہرہ نظر آئے، اور شروع اور ختم ہونے کا وقت نوٹ کریں۔ اگلی ملاقات پر ویڈیو ڈاکٹر کو دکھائیں۔"
+  }
+]
