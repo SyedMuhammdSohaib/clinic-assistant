@@ -20,7 +20,7 @@ prescription photo. The doctor keeps control of every medical decision.
 - Questions: shows only answers the doctor approved. **AI** matches a question in the parent's own words to an approved answer; anything else goes to the doctor.
 - **AI:** photo of a prescription slip. Medicines are read from it and sent to the doctor to approve.
 - "Seizure happening now" screen with first aid and a 1122 call button.
-- Phone number + one-time code login.
+- Phone number + one-time code login (code sent by SMS from the clinic's Android phone).
 
 **Doctor dashboard** (Next.js)
 - Patient list, children with unseen red flags first.
@@ -127,7 +127,7 @@ pytest
 
 ## Limits (what a real deployment would still need)
 
-- Login codes are printed in the server terminal; a real SMS/WhatsApp sender is needed.
+- Login codes go by SMS from the clinic's own Android phone (free, see [`backend/README.md`](backend/README.md#login-codes-by-sms-free)); that phone must stay on. A paid SMS or WhatsApp service would be more reliable at scale.
 - The doctor side uses a shared API key, not individual logins.
 - No hosting, HTTPS, backups or encryption at rest.
 - On Gemini's free tier, Google may use the data to improve its products, so only demo data should be sent. Real patients would need a paid plan with a data agreement and the clinic's consent.

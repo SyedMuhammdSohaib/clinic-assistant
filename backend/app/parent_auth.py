@@ -1,12 +1,18 @@
 """Parent login with a one-time code sent to their phone.
 
-For the pilot there is no SMS service yet, so `send_code` prints the code in the
-backend terminal (the doctor or you read it out to the parent). Replace send_code
-with a real SMS or WhatsApp sender before going live.
+The code goes out as an SMS from the clinic's own Android phone, using the free
+SMS Gateway for Android app (https://sms-gate.app). Set SMS_GATEWAY_URL,
+SMS_GATEWAY_USER and SMS_GATEWAY_PASSWORD to turn it on. Without them, or if the
+phone cannot be reached, the code is printed in the backend terminal instead.
 """
+import base64
 import hashlib
+import json
 import logging
+import os
 import secrets
+import urllib.error
+import urllib.request
 
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -38,14 +44,44 @@ def new_token() -> str:
     return secrets.token_urlsafe(32)
 
 
+def sms_text(code: str) -> str:
+    return f"Clinic login code: {code}. Valid for 10 minutes. Do not share it with anyone."
+
+
+def send_sms(phone: str, text: str) -> None:
+    """Send one SMS through the SMS Gateway for Android app. Raises OSError on failure."""
+    url = os.environ["SMS_GATEWAY_URL"]
+    user = os.environ.get("SMS_GATEWAY_USER", "")
+    password = os.environ.get("SMS_GATEWAY_PASSWORD", "")
+    auth = base64.b64encode(f"{user}:{password}".encode()).decode()
+    req = urllib.request.Request(
+        url,
+        data=json.dumps({"textMessage": {"text": text}, "phoneNumbers": [f"+{phone}"]}).encode(),
+        headers={"Content-Type": "application/json", "Authorization": f"Basic {auth}"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            resp.read()
+    except urllib.error.HTTPError as e:
+        raise OSError(f"SMS gateway error {e.code}: {e.read().decode(errors='replace')[:300]}") from e
+
+
 def send_code(phone: str, code: str) -> None:
-    """Pilot delivery: print to the backend terminal. Swap for SMS/WhatsApp later.
+    """Send the code by SMS, or print it in the backend terminal when SMS is off or fails.
 
     print() is used on purpose: logging output can be swallowed depending on how
     uvicorn configures logging, and the code must always be visible here.
     """
+    if os.environ.get("SMS_GATEWAY_URL"):
+        try:
+            send_sms(phone, sms_text(code))
+            log.info("Login code sent by SMS to %s", phone)
+            return
+        except (OSError, urllib.error.URLError) as e:
+            log.error("Could not send the login code by SMS to %s: %s", phone, e)
     print(f"\n>>> Parent login code for {phone}: {code} (valid 10 minutes)\n", flush=True)
-    log.info("Login code sent to %s", phone)
+    log.info("Login code printed for %s", phone)
 
 
 def require_parent(

@@ -1,11 +1,13 @@
 """Tests that need no database and no web server."""
+import base64
+import json
 import re
 from datetime import datetime, timedelta, timezone
 
 import pytest
 from pydantic import ValidationError
 
-from app import queries
+from app import parent_auth, queries
 from app.redflags import DEFAULT_RULE, condition_hit
 from app.schemas import (
     AdherenceIn,
@@ -161,3 +163,76 @@ def test_sql_has_no_stray_percent_signs():
     for name, sql in statements.items():
         stray = re.findall(r"%(?!\(\w+\)s)", sql)
         assert not stray, f"{name} contains a stray percent sign"
+
+
+# ---------------------------------------------------------------- login code by SMS
+
+class FakeGateway:
+    """Stands in for the SMS Gateway for Android app and records what it was sent."""
+
+    def __init__(self, status=200):
+        import http.server
+        import threading
+
+        self.requests = []
+        gateway = self
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_POST(self):
+                body = self.rfile.read(int(self.headers["Content-Length"]))
+                gateway.requests.append((self.headers["Authorization"], json.loads(body)))
+                self.send_response(status)
+                self.end_headers()
+                self.wfile.write(b"{}")
+
+            def log_message(self, *args):
+                pass
+
+        self.server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+        self.url = f"http://127.0.0.1:{self.server.server_port}/3rdparty/v1/message"
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+
+    def close(self):
+        self.server.shutdown()
+
+
+@pytest.fixture
+def gateway(monkeypatch):
+    fake = FakeGateway()
+    monkeypatch.setenv("SMS_GATEWAY_URL", fake.url)
+    monkeypatch.setenv("SMS_GATEWAY_USER", "clinic")
+    monkeypatch.setenv("SMS_GATEWAY_PASSWORD", "secret")
+    yield fake
+    fake.close()
+
+
+def test_login_code_goes_by_sms_when_gateway_is_set(gateway, capsys):
+    parent_auth.send_code("923001234567", "123456")
+    assert len(gateway.requests) == 1
+    auth, body = gateway.requests[0]
+    assert auth == "Basic " + base64.b64encode(b"clinic:secret").decode()
+    assert body["phoneNumbers"] == ["+923001234567"]
+    assert "123456" in body["textMessage"]["text"]
+    assert "123456" not in capsys.readouterr().out
+
+
+def test_login_code_is_printed_when_sms_is_off(monkeypatch, capsys):
+    monkeypatch.delenv("SMS_GATEWAY_URL", raising=False)
+    parent_auth.send_code("923001234567", "123456")
+    assert "123456" in capsys.readouterr().out
+
+
+def test_login_code_is_printed_when_sms_fails(monkeypatch, capsys):
+    fake = FakeGateway(status=500)
+    monkeypatch.setenv("SMS_GATEWAY_URL", fake.url)
+    try:
+        parent_auth.send_code("923001234567", "654321")
+    finally:
+        fake.close()
+    assert "654321" in capsys.readouterr().out
+
+
+def test_login_code_is_printed_when_phone_is_offline(monkeypatch, capsys):
+    monkeypatch.setenv("SMS_GATEWAY_URL", "http://127.0.0.1:9/message")
+    parent_auth.send_code("923001234567", "111222")
+    assert "111222" in capsys.readouterr().out
