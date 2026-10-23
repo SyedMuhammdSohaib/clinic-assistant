@@ -6,6 +6,7 @@ cd /d "%~dp0backend" || (echo backend folder nahi mila & pause & exit /b 1)
 set "VENV=%~dp0.venv"
 call "%VENV%\Scripts\activate.bat" || (echo .venv nahi mila: %VENV% & pause & exit /b 1)
 
+rem If the password has @ in it, write %%%%40 instead of @ (e.g. abc@1 becomes abc%%%%401).
 set "DATABASE_URL=postgresql://postgres:YOUR_DB_PASSWORD@localhost/clinic"
 set "DOCTOR_API_KEY=choose-a-long-random-key"
 set "BOT_API_KEY=choose-another-long-random-key"

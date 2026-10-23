@@ -39,7 +39,8 @@ def read_bat(path: pathlib.Path) -> dict[str, str]:
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         m = re.match(r'\s*set\s+"([A-Z_]+)=(.*)"\s*$', line, re.IGNORECASE)
         if m:
-            values[m.group(1).upper()] = m.group(2)
+            # cmd turns %% into %, so a password written as abc%%401 reaches the app as abc%401.
+            values[m.group(1).upper()] = m.group(2).replace("%%", "%")
     return values
 
 
@@ -53,7 +54,10 @@ def check_settings(settings: dict[str, str]) -> None:
 
 
 def create_database(url: str) -> None:
-    info = conninfo_to_dict(url)
+    try:
+        info = conninfo_to_dict(url)
+    except psycopg.ProgrammingError:
+        fail("DATABASE_URL theek nahi likha. Password mein @ ho to run-backend.bat mein us ki jagah %%40 likhein.")
     dbname = info.get("dbname") or "clinic"
     admin_url = make_conninfo(url, dbname="postgres")
     try:
