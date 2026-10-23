@@ -236,3 +236,9 @@ def test_login_code_is_printed_when_phone_is_offline(monkeypatch, capsys):
     monkeypatch.setenv("SMS_GATEWAY_URL", "http://127.0.0.1:9/message")
     parent_auth.send_code("923001234567", "111222")
     assert "111222" in capsys.readouterr().out
+
+
+def test_login_code_is_printed_when_gateway_url_is_malformed(monkeypatch, capsys):
+    monkeypatch.setenv("SMS_GATEWAY_URL", "192.168.10.10:8080/message")  # http:// missing
+    parent_auth.send_code("923001234567", "333444")
+    assert "333444" in capsys.readouterr().out

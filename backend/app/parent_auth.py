@@ -78,7 +78,7 @@ def send_code(phone: str, code: str) -> None:
             send_sms(phone, sms_text(code))
             log.info("Login code sent by SMS to %s", phone)
             return
-        except (OSError, urllib.error.URLError) as e:
+        except Exception as e:  # a bad URL or an SMS problem must never break the login page
             log.error("Could not send the login code by SMS to %s: %s", phone, e)
     print(f"\n>>> Parent login code for {phone}: {code} (valid 10 minutes)\n", flush=True)
     log.info("Login code printed for %s", phone)
