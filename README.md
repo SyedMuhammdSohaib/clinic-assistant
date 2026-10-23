@@ -112,8 +112,10 @@ copy .env.local.example .env.local                   # same DOCTOR_API_KEY as th
 npm run dev                                          # http://localhost:3000
 ```
 
-On Windows, copy `run-backend.example.bat` to `run-backend.bat`, fill in your values, and
-double-click `start.bat` to start everything. Details: [`backend/README.md`](backend/README.md),
+On Windows, copy `run-backend.example.bat` to `run-backend.bat` and fill in your values.
+Then double-click `setup.bat` once (it installs the Python and Node packages, creates the
+database and tables, writes `dashboard/.env.local`, and can register your phone number as a
+demo parent), and `start.bat` every time after that to start everything. Details: [`backend/README.md`](backend/README.md),
 [`dashboard/README.md`](dashboard/README.md).
 
 Tests (need a throwaway database whose name ends in `_test`):
