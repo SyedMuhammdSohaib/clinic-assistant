@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ageText, fmtNum } from "@/lib/format";
+import { ageText, fmtNum, shortId } from "@/lib/format";
 import type { PatientListItem } from "@/lib/types";
 
 export function PatientList({ patients, now }: { patients: PatientListItem[]; now?: Date }) {
@@ -8,7 +8,7 @@ export function PatientList({ patients, now }: { patients: PatientListItem[]; no
       <div className="card stack-sm">
         <h2>No patients yet</h2>
         <p className="muted">
-          Add a doctor and a patient from the API docs page (http://127.0.0.1:8000/docs), then refresh.
+          Use <Link href="/patients/new">+ Add patient</Link> to add the first child.
         </p>
       </div>
     );
@@ -25,6 +25,7 @@ export function PatientList({ patients, now }: { patients: PatientListItem[]; no
                 {ageText(p.date_of_birth, now)}
                 {p.weight_kg !== null ? ` · ${fmtNum(p.weight_kg)} kg` : ""}
               </span>
+              <span className="muted small">ID <span className="patient-id">{shortId(p.id)}</span></span>
             </div>
             <span className="badges">
               {p.unseen_red_flags > 0 ? (

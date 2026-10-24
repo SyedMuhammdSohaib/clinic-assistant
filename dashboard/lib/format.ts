@@ -73,3 +73,13 @@ export function timesPerDayText(n: number): string {
 export function changeTypeText(type: string): string {
   return type.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 }
+
+/** The short patient id the doctor sees and types: the first 8 characters of the real id. */
+export function shortId(id: string): string {
+  return id.slice(0, 8).toUpperCase();
+}
+
+/** 923001234567 -> 0300 1234567; other numbers as stored. */
+export function phoneText(phone: string): string {
+  return /^92\d{10}$/.test(phone) ? `0${phone.slice(2, 5)} ${phone.slice(5)}` : phone;
+}

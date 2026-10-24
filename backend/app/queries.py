@@ -11,6 +11,7 @@ VALUES (%(full_name)s, %(email)s, %(phone)s, %(clinic_name)s)
 RETURNING *"""
 
 DOCTOR_EXISTS = "SELECT id FROM doctors WHERE id = %(id)s"
+LIST_DOCTORS = "SELECT id, full_name, email, clinic_name FROM doctors ORDER BY created_at"
 
 INSERT_RULE = """
 INSERT INTO red_flag_rules (doctor_id, name, condition_json, message_ur, message_en)
@@ -44,8 +45,20 @@ WHERE p.is_active"""
 
 LIST_PATIENTS = _LIST_PATIENTS + "\nORDER BY p.full_name"
 LIST_PATIENTS_BY_DOCTOR = _LIST_PATIENTS + "\n  AND p.doctor_id = %(doctor_id)s\nORDER BY p.full_name"
+# Doctor's search box: the start of the patient id, part of the name, or a parent's phone.
+SEARCH_PATIENTS = _LIST_PATIENTS + """
+  AND ((%(id_prefix)s::text IS NOT NULL AND starts_with(p.id::text, %(id_prefix)s))
+       OR (%(name)s::text IS NOT NULL AND strpos(lower(p.full_name), %(name)s) > 0)
+       OR EXISTS (SELECT 1 FROM patient_guardians pg JOIN guardians g ON g.id = pg.guardian_id
+                  WHERE pg.patient_id = p.id AND g.phone = %(phone)s))
+ORDER BY p.full_name"""
 
 GET_PATIENT = "SELECT * FROM patients WHERE id = %(id)s"
+PATIENT_GUARDIANS = """
+SELECT g.id, g.full_name, g.phone, g.relation, pg.is_primary
+FROM patient_guardians pg JOIN guardians g ON g.id = pg.guardian_id
+WHERE pg.patient_id = %(patient_id)s
+ORDER BY pg.is_primary DESC, g.full_name"""
 PATIENT_EXISTS = "SELECT id FROM patients WHERE id = %(id)s"
 DOCTOR_NAME_FOR_PATIENT = """
 SELECT d.full_name

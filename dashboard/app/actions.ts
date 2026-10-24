@@ -137,3 +137,54 @@ export async function rejectSlip(formData: FormData): Promise<void> {
   revalidatePath(`/patients/${patientId}`, "layout");
   redirect(message ? `${back}?error=${encodeURIComponent(message)}` : `${back}?rejected=1`);
 }
+
+// ---------------------------------------------------------------- new patient
+
+export async function addPatient(formData: FormData): Promise<void> {
+  const back = "/patients/new";
+  const name = field(formData, "full_name");
+  const dob = field(formData, "date_of_birth");
+  const parentName = field(formData, "parent_name");
+  const phone = field(formData, "parent_phone").replace(/[\s()-]/g, "");
+
+  let message = "";
+  if (!name || !dob) message = "Write the child's name and date of birth";
+  else if (phone && !/^\+?[0-9]{9,15}$/.test(phone)) message = "Write the phone number like 03001234567";
+  else if (phone && !parentName) message = "Write the parent's name too";
+  if (message) redirect(`${back}?error=${encodeURIComponent(message)}`);
+
+  const body: Record<string, unknown> = {
+    doctor_id: field(formData, "doctor_id"),
+    full_name: name,
+    date_of_birth: dob,
+    preferred_language: field(formData, "preferred_language") || "ur",
+  };
+  const sex = field(formData, "sex");
+  const weight = field(formData, "weight_kg");
+  if (sex) body.sex = sex;
+  if (weight) body.weight_kg = weight;
+
+  let patientId = "";
+  try {
+    const patient = await apiPost<{ id: string }>("/patients", body);
+    patientId = patient.id;
+    if (phone) {
+      await apiPost(`/patients/${seg(patientId)}/guardians`, {
+        full_name: parentName,
+        phone,
+        relation: field(formData, "relation") || null,
+        is_primary: true,
+      });
+    }
+  } catch (e) {
+    const reason = e instanceof ApiError ? e.message : "Is the backend running?";
+    message = patientId
+      ? `The child was added, but the parent's number was not saved: ${reason}`
+      : `Could not add the patient: ${reason}`;
+  }
+
+  revalidatePath("/");
+  // redirect() works by throwing, so it stays outside the try block above.
+  if (message) redirect(`${back}?error=${encodeURIComponent(message)}`);
+  redirect(`/patients/${seg(patientId)}`);
+}

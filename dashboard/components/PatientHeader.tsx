@@ -1,10 +1,20 @@
 import Link from "next/link";
-import { ageText, fmtNum } from "@/lib/format";
-import type { Patient } from "@/lib/types";
+import { ageText, fmtNum, phoneText, shortId } from "@/lib/format";
+import type { Guardian, Patient } from "@/lib/types";
 
 type Tab = "overview" | "medicines" | "previsit" | "slips";
 
-export function PatientHeader({ patient, active, now }: { patient: Patient; active: Tab; now?: Date }) {
+export function PatientHeader({
+  patient,
+  active,
+  guardians,
+  now,
+}: {
+  patient: Patient;
+  active: Tab;
+  guardians?: Guardian[];
+  now?: Date;
+}) {
   const base = `/patients/${encodeURIComponent(patient.id)}`;
   const tabs: { key: Tab; label: string; href: string }[] = [
     { key: "overview", label: "Timeline", href: base },
@@ -23,6 +33,16 @@ export function PatientHeader({ patient, active, now }: { patient: Patient; acti
           {weight}
           {patient.diagnosis ? ` · ${patient.diagnosis}` : ""}
         </span>
+        <span className="muted small">ID <span className="patient-id">{shortId(patient.id)}</span></span>
+        {guardians && (
+          <span className="muted small">
+            {guardians.length === 0
+              ? "No parent's number saved yet"
+              : guardians
+                  .map((g) => `${g.full_name}${g.relation ? ` (${g.relation})` : ""}: ${phoneText(g.phone)}`)
+                  .join(" · ")}
+          </span>
+        )}
       </div>
       <nav className="tabs" aria-label="Patient sections">
         {tabs.map((t) => (

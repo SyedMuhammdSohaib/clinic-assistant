@@ -3,6 +3,21 @@
 
 export type Num = number | string;
 
+export interface Doctor {
+  id: string;
+  full_name: string;
+  email: string;
+  clinic_name: string | null;
+}
+
+export interface Guardian {
+  id: string;
+  full_name: string;
+  phone: string;
+  relation: string | null;
+  is_primary: boolean;
+}
+
 export interface PatientListItem {
   id: string;
   full_name: string;

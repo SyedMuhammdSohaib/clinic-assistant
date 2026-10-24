@@ -7,22 +7,23 @@ import { Stats } from "@/components/Stats";
 import { Timeline } from "@/components/Timeline";
 import { apiGet, getOrNotFound, seg } from "@/lib/api";
 import { weeklyBuckets } from "@/lib/chart";
-import type { ParentQuestion, Patient, Previsit, RedFlag, TimelineRow } from "@/lib/types";
+import type { Guardian, ParentQuestion, Patient, Previsit, RedFlag, TimelineRow } from "@/lib/types";
 
 export default async function PatientPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const patient = await getOrNotFound<Patient>(`/patients/${seg(id)}`);
-  const [timeline, flags, summary, questions] = await Promise.all([
+  const [timeline, flags, summary, questions, guardians] = await Promise.all([
     apiGet<TimelineRow[]>(`/patients/${seg(id)}/timeline?limit=200`),
     apiGet<RedFlag[]>(`/patients/${seg(id)}/red-flags`),
     apiGet<Previsit>(`/patients/${seg(id)}/previsit`),
     apiGet<ParentQuestion[]>(`/patients/${seg(id)}/questions`),
+    apiGet<Guardian[]>(`/patients/${seg(id)}/guardians`),
   ]);
   const weeks = weeklyBuckets(timeline, new Date(), 12);
 
   return (
     <div className="stack-lg">
-      <PatientHeader patient={patient} active="overview" />
+      <PatientHeader patient={patient} active="overview" guardians={guardians} />
       <RedFlags flags={flags} patientId={patient.id} markSeen={markRedFlagSeen} />
       <Questions questions={questions} patientId={patient.id} answer={answerQuestion} />
       <Stats summary={summary} />

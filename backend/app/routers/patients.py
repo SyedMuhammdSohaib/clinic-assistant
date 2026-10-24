@@ -1,7 +1,7 @@
 """Doctors, patients and guardians. Doctor key only."""
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app import queries as q
 from app.schedule import normalize_phone
@@ -13,6 +13,18 @@ from app.redflags import DEFAULT_RULE, condition_json
 from app.schemas import DoctorIn, GuardianIn, PatientIn
 
 router = APIRouter(tags=["patients"], dependencies=[Depends(require_doctor)])
+
+
+def search_params(text: str) -> dict:
+    """What the doctor typed, read three ways. Short or odd input matches nothing it could not mean."""
+    text = text.strip()
+    compact = text.replace("-", "").replace(" ", "").lower()
+    looks_like_id = len(compact) >= 4 and all(c in "0123456789abcdef" for c in compact)
+    return {
+        "id_prefix": text.lower() if looks_like_id else None,
+        "name": text.lower() if len(text) >= 2 else None,
+        "phone": normalize_phone(text) if sum(c.isdigit() for c in text) >= 9 else None,
+    }
 
 
 @router.post("/doctors", status_code=201)
@@ -33,6 +45,11 @@ def create_doctor(body: DoctorIn, conn=Depends(get_conn)):
     return doctor
 
 
+@router.get("/doctors")
+def list_doctors(conn=Depends(get_conn)):
+    return conn.execute(q.LIST_DOCTORS).fetchall()
+
+
 @router.post("/patients", status_code=201)
 def create_patient(body: PatientIn, conn=Depends(get_conn)):
     one_or_404(conn, q.DOCTOR_EXISTS, {"id": body.doctor_id}, "Doctor")
@@ -45,7 +62,13 @@ def create_patient(body: PatientIn, conn=Depends(get_conn)):
 
 
 @router.get("/patients")
-def list_patients(doctor_id: UUID | None = None, conn=Depends(get_conn)):
+def list_patients(
+    doctor_id: UUID | None = None,
+    search: str | None = Query(None, alias="q", max_length=100, description="Patient id start, name or parent's phone"),
+    conn=Depends(get_conn),
+):
+    if search and search.strip():
+        return conn.execute(q.SEARCH_PATIENTS, search_params(search)).fetchall()
     if doctor_id is None:
         return conn.execute(q.LIST_PATIENTS).fetchall()
     return conn.execute(q.LIST_PATIENTS_BY_DOCTOR, {"doctor_id": doctor_id}).fetchall()
@@ -54,6 +77,12 @@ def list_patients(doctor_id: UUID | None = None, conn=Depends(get_conn)):
 @router.get("/patients/{patient_id}")
 def get_patient(patient_id: UUID, conn=Depends(get_conn)):
     return one_or_404(conn, q.GET_PATIENT, {"id": patient_id}, "Patient")
+
+
+@router.get("/patients/{patient_id}/guardians")
+def list_guardians(patient_id: UUID, conn=Depends(get_conn)):
+    one_or_404(conn, q.PATIENT_EXISTS, {"id": patient_id}, "Patient")
+    return conn.execute(q.PATIENT_GUARDIANS, {"patient_id": patient_id}).fetchall()
 
 
 @router.post("/patients/{patient_id}/guardians", status_code=201)
