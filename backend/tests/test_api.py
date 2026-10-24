@@ -72,6 +72,31 @@ def test_doctors_are_listed_for_the_doctor_key_only(client, world):
     assert client.get("/doctors", headers=BOT).status_code == 401
 
 
+def test_doctor_finds_a_patient_by_id_start_name_or_parent_phone(client, world):
+    pid = world["pid"]
+    other = ok(client.post("/patients", headers=DOC, json={
+        "doctor_id": world["doctor"]["id"], "full_name": "Other Child", "date_of_birth": "2018-01-01"}), 201)
+
+    def found(text):
+        return [p["id"] for p in ok(client.get("/patients", params={"q": text}, headers=DOC))]
+
+    assert found(pid[:8].upper()) == [pid]                    # the short id shown on the dashboard
+    assert found(pid) == [pid]                                # the full id
+    assert found("sample") == [pid]                           # part of the name, any case
+    assert found("0300-1234567") == [pid]                     # the parent's phone as the doctor writes it
+    assert found("child") == [other["id"], pid]               # several matches come back as a list
+    assert found("zzzz") == []
+    assert found("a") == []                                   # one letter matches nothing
+    assert len(found("")) == 2                                # empty search is the normal list
+
+
+def test_guardians_are_listed_on_the_patient(client, world):
+    guardians = ok(client.get(f"/patients/{world['pid']}/guardians", headers=DOC))
+    assert [(g["full_name"], g["phone"], g["is_primary"]) for g in guardians] == [("Sample Mother", "923001234567", True)]
+    assert client.get(f"/patients/{world['pid']}/guardians", headers=BOT).status_code == 401
+    assert client.get("/patients/00000000-0000-0000-0000-000000000000/guardians", headers=DOC).status_code == 404
+
+
 def test_duplicate_doctor_email_is_a_conflict(client, world):
     response = client.post("/doctors", json={"full_name": "Other", "email": "dr@example.com"}, headers=DOC)
     assert response.status_code == 409

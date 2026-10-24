@@ -10,6 +10,14 @@ export interface Doctor {
   clinic_name: string | null;
 }
 
+export interface Guardian {
+  id: string;
+  full_name: string;
+  phone: string;
+  relation: string | null;
+  is_primary: boolean;
+}
+
 export interface PatientListItem {
   id: string;
   full_name: string;
