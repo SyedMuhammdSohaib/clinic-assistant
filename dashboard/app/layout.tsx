@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="brand-sub">Child neurology</span>
             </Link>
             <Link href="/" className="side-link">Patients</Link>
+            <Link href="/patients/new" className="side-link side-link-button">+ Add patient</Link>
             <a href="http://127.0.0.1:8000/docs" className="side-link" target="_blank" rel="noreferrer">
               API docs (add data)
             </a>

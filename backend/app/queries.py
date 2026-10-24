@@ -11,6 +11,7 @@ VALUES (%(full_name)s, %(email)s, %(phone)s, %(clinic_name)s)
 RETURNING *"""
 
 DOCTOR_EXISTS = "SELECT id FROM doctors WHERE id = %(id)s"
+LIST_DOCTORS = "SELECT id, full_name, email, clinic_name FROM doctors ORDER BY created_at"
 
 INSERT_RULE = """
 INSERT INTO red_flag_rules (doctor_id, name, condition_json, message_ur, message_en)

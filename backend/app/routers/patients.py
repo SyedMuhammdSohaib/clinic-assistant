@@ -33,6 +33,11 @@ def create_doctor(body: DoctorIn, conn=Depends(get_conn)):
     return doctor
 
 
+@router.get("/doctors")
+def list_doctors(conn=Depends(get_conn)):
+    return conn.execute(q.LIST_DOCTORS).fetchall()
+
+
 @router.post("/patients", status_code=201)
 def create_patient(body: PatientIn, conn=Depends(get_conn)):
     one_or_404(conn, q.DOCTOR_EXISTS, {"id": body.doctor_id}, "Doctor")

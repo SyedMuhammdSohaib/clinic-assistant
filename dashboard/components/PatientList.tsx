@@ -8,7 +8,7 @@ export function PatientList({ patients, now }: { patients: PatientListItem[]; no
       <div className="card stack-sm">
         <h2>No patients yet</h2>
         <p className="muted">
-          Add a doctor and a patient from the API docs page (http://127.0.0.1:8000/docs), then refresh.
+          Use <Link href="/patients/new">+ Add patient</Link> to add the first child.
         </p>
       </div>
     );

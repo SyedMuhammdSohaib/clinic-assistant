@@ -65,6 +65,13 @@ def test_keys_are_required_and_roles_are_separated(client, world):
     assert client.get(f"/patients/{pid}/medications", headers=DOC).status_code == 200  # doctor key works everywhere
 
 
+def test_doctors_are_listed_for_the_doctor_key_only(client, world):
+    doctors = ok(client.get("/doctors", headers=DOC))
+    assert [d["id"] for d in doctors] == [world["doctor"]["id"]]
+    assert set(doctors[0]) == {"id", "full_name", "email", "clinic_name"}
+    assert client.get("/doctors", headers=BOT).status_code == 401
+
+
 def test_duplicate_doctor_email_is_a_conflict(client, world):
     response = client.post("/doctors", json={"full_name": "Other", "email": "dr@example.com"}, headers=DOC)
     assert response.status_code == 409
