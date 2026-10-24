@@ -252,3 +252,14 @@ def test_phone_on_local_wifi_is_reached_without_the_computers_proxy(gateway, mon
     parent_auth.send_code("923001234567", "555666")
     assert len(gateway.requests) == 1
     assert "555666" not in capsys.readouterr().out
+
+
+def test_notice_goes_by_sms_or_is_printed(gateway, monkeypatch, capsys):
+    from app import sms
+
+    monkeypatch.setattr(sms, "_dispatch", lambda job: job())   # run the background send right away
+    sms.notify("923001234567", "Doctor ne jawab de diya")
+    assert gateway.requests[0][1]["textMessage"]["text"] == "Doctor ne jawab de diya"
+    monkeypatch.delenv("SMS_GATEWAY_URL")
+    sms.notify("923001234567", "printed instead")
+    assert "printed instead" in capsys.readouterr().out

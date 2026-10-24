@@ -83,3 +83,8 @@ export function shortId(id: string): string {
 export function phoneText(phone: string): string {
   return /^92\d{10}$/.test(phone) ? `0${phone.slice(2, 5)} ${phone.slice(5)}` : phone;
 }
+
+/** Today's date in the clinic, as YYYY-MM-DD for date inputs. */
+export function clinicToday(now: Date = new Date()): string {
+  return now.toLocaleDateString("en-CA", { timeZone: TZ });
+}

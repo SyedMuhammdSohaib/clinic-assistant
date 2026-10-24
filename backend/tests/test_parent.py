@@ -162,6 +162,37 @@ def test_seizure_from_the_app_raises_the_red_flag(client, family, sent_codes):
     assert row["unseen_red_flags"] == 1
 
 
+def test_red_flag_texts_the_doctor(client, family, sent_codes, sms_notices, monkeypatch):
+    h = login(client, sent_codes)
+    child = family["child"]["id"]
+    ok(client.post(f"/parent/children/{child}/seizures", headers=h,
+                   json={"occurred_at": ago(minutes=50), "duration_seconds": 400}), 201)
+    assert sms_notices == []                                  # no doctor number saved anywhere yet
+
+    monkeypatch.setenv("DOCTOR_ALERT_PHONE", "0321-7654321")
+    ok(client.post(f"/parent/children/{child}/seizures", headers=h,
+                   json={"occurred_at": ago(minutes=40), "duration_seconds": 60}), 201)
+    assert sms_notices == []                                  # a short seizure raises no flag
+    ok(client.post(f"/parent/children/{child}/seizures", headers=h,
+                   json={"occurred_at": ago(minutes=30), "duration_seconds": 400}), 201)
+    [(phone, text)] = sms_notices
+    assert phone == "923217654321"
+    assert "RED FLAG" in text and "Sample Child" in text and child[:8].upper() in text
+
+
+def test_answer_texts_the_parent_in_their_language(client, family, sent_codes, sms_notices, monkeypatch):
+    monkeypatch.setenv("PARENT_APP_URL", "https://clinic.example/app/")
+    h = login(client, sent_codes)
+    child = family["child"]["id"]
+    asked = ok(client.post(f"/parent/children/{child}/questions", headers=h,
+                           json={"question": "Kya bukhar mein dawai deni hai?"}), 201)
+    assert sms_notices == []
+    ok(client.post(f"/questions/{asked['id']}/answer", headers=DOC, json={"answer": "Haan, waqt par dein."}))
+    [(phone, text)] = sms_notices
+    assert phone == "923001234567"
+    assert text.startswith("ڈاکٹر نے") and text.endswith("https://clinic.example/app/")   # the child's language is Urdu
+
+
 def test_side_effect(client, family, sent_codes):
     h = login(client, sent_codes)
     child = family["child"]["id"]

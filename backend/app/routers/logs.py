@@ -7,7 +7,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 
 from app import queries as q
-from app import services
+from app import notifications, services
 from app.auth import require_doctor, require_service
 from app.common import audit, ensure_patient_and_guardian, one_or_404
 from app.db import get_conn
@@ -26,6 +26,7 @@ def log_seizure(
     ensure_patient_and_guardian(conn, patient_id, body.guardian_id)
     result = services.log_seizure(conn, patient_id, body.guardian_id, body)
     conn.commit()
+    notifications.alert_doctor(conn, patient_id, result["red_flags"])
     return result
 
 

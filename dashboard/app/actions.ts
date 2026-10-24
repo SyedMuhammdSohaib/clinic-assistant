@@ -86,6 +86,45 @@ export async function changeMedicine(formData: FormData): Promise<void> {
   redirect(message ? `${back}?error=${encodeURIComponent(message)}` : `${back}?saved=1`);
 }
 
+export async function addMedicine(formData: FormData): Promise<void> {
+  const patientId = field(formData, "patient_id");
+  const back = `/patients/${seg(patientId)}/medicines`;
+  const times = Number(field(formData, "times_per_day"));
+  const doseTimes = field(formData, "dose_times")
+    .split(/[\s,]+/)
+    .filter(Boolean);
+
+  let message = "";
+  const name = field(formData, "drug_name");
+  const dose = field(formData, "dose_amount");
+  const unit = field(formData, "dose_unit");
+  const start = field(formData, "started_on");
+  if (!name || !dose || !unit || !times || !start) message = "Fill in the name, dose, unit, times a day and start date";
+  else if (doseTimes.length && doseTimes.length !== times) message = `Write ${times} dose time${times > 1 ? "s" : ""}, or leave the times empty`;
+  else if (doseTimes.some((t) => !/^([01]?\d|2[0-3]):[0-5]\d$/.test(t))) message = "Write dose times like 08:00, 20:00";
+  else {
+    const body: Record<string, unknown> = {
+      drug_name: name,
+      dose_amount: dose,
+      dose_unit: unit,
+      times_per_day: times,
+      route: field(formData, "route") || "oral",
+      started_on: start,
+    };
+    if (doseTimes.length) body.dose_times = doseTimes.map((t) => t.padStart(5, "0"));
+    const reason = field(formData, "reason");
+    if (reason) body.reason = reason;
+    try {
+      await apiPost(`/patients/${seg(patientId)}/medications`, body);
+    } catch (e) {
+      message = e instanceof ApiError ? e.message : "Could not add the medicine. Is the backend running?";
+    }
+  }
+
+  revalidatePath(`/patients/${patientId}`, "layout");
+  redirect(message ? `${back}?error=${encodeURIComponent(message)}` : `${back}?added=1`);
+}
+
 // ---------------------------------------------------------------- prescription slips
 
 export async function approveSlip(formData: FormData): Promise<void> {

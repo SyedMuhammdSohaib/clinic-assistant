@@ -60,6 +60,17 @@ FROM patient_guardians pg JOIN guardians g ON g.id = pg.guardian_id
 WHERE pg.patient_id = %(patient_id)s
 ORDER BY pg.is_primary DESC, g.full_name"""
 PATIENT_EXISTS = "SELECT id FROM patients WHERE id = %(id)s"
+# Who to text about a patient: their doctor, and the parent who asked a question.
+PATIENT_AND_DOCTOR_PHONE = """
+SELECT p.id, p.full_name, d.phone AS doctor_phone
+FROM patients p JOIN doctors d ON d.id = p.doctor_id
+WHERE p.id = %(patient_id)s"""
+QUESTION_ASKER = """
+SELECT g.phone, p.preferred_language
+FROM parent_questions pq
+JOIN patients p ON p.id = pq.patient_id
+LEFT JOIN guardians g ON g.id = pq.guardian_id
+WHERE pq.id = %(question_id)s"""
 DOCTOR_NAME_FOR_PATIENT = """
 SELECT d.full_name
 FROM doctors d JOIN patients p ON p.doctor_id = d.id

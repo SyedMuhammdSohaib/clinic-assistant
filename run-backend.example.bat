@@ -17,6 +17,10 @@ rem Leave empty to see the codes in this window instead.
 set "SMS_GATEWAY_URL="
 set "SMS_GATEWAY_USER="
 set "SMS_GATEWAY_PASSWORD="
+rem Optional. The doctor gets an SMS on this number when a red flag fires.
+set "DOCTOR_ALERT_PHONE="
+rem Optional. Added to the "doctor answered" SMS, once the parent app is online.
+set "PARENT_APP_URL="
 
 echo Agar SMS on nahi hai ya fail ho, parent login code isi window mein aayega.
 uvicorn app.main:app --reload
