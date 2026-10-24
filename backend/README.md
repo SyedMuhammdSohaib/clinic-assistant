@@ -87,11 +87,11 @@ parent how long it lasted.
 The parent app is served by this same server at http://127.0.0.1:8000/app/ (plain HTML and
 JavaScript in `app/static/parent/`, no build step). Urdu and English.
 
-- **Login:** the parent enters the phone number the doctor saved; a 6-digit code is sent.
-  For the pilot there is no SMS service, so the code is **printed in the backend terminal**
-  (`Parent login code for 923001234567: 123456`). Replace `send_code` in
-  `app/parent_auth.py` with an SMS or WhatsApp sender before going live. Codes last 10
-  minutes, 5 codes per hour per number, 5 wrong tries per code. Sessions last 30 days.
+- **Login:** the parent enters the phone number the doctor saved; a 6-digit code is sent
+  by SMS (see "Login codes by SMS" below). Without SMS set up, or if the SMS fails, the code
+  is **printed in the backend terminal** (`Parent login code for 923001234567: 123456`).
+  Codes last 10 minutes, 5 codes per hour per number, 5 wrong tries per code. Sessions last
+  30 days.
 - **Screens:** seizure happening now (first aid + 1122), record a seizure (red flag screen
   when a rule fires), today's medicines (given / late / not given / vomited), questions
   (only published answers; anything else goes to the doctor), side effects.
@@ -110,6 +110,29 @@ Existing database from the first version: run `db/migrations/002_parent_app.sql`
 | `GET /parent/children/{id}/faq` | parent token | published approved answers |
 | `GET`/`POST /parent/children/{id}/questions` | parent token | ask the doctor, see answers |
 | `GET /patients/{id}/questions`, `POST /questions/{id}/answer` | doctor | answer parents' questions |
+
+### Login codes by SMS (free)
+
+The code is sent as a normal SMS from the clinic's own Android phone and SIM, using the free,
+open-source [SMS Gateway for Android](https://sms-gate.app) app. No SMS company account
+is needed; each code uses one SMS from the SIM's package.
+
+1. Install the app on an Android phone with a SIM (the clinic's spare phone is ideal).
+   Keep it charged and on the internet.
+2. In the app, turn on **Cloud server** and note the username and password it shows.
+3. Set these for the backend and restart it:
+   ```
+   SMS_GATEWAY_URL=https://api.sms-gate.app/3rdparty/v1/message
+   SMS_GATEWAY_USER=<username from the app>
+   SMS_GATEWAY_PASSWORD=<password from the app>
+   ```
+   If the backend and the phone are on the same Wi-Fi you can use **Local server** instead:
+   `SMS_GATEWAY_URL=http://<phone's IP>:8080/message` with the local username and password.
+4. Add the parent's number with `POST /patients/{id}/guardians`, then log in at `/app/`.
+
+If the phone is off or the SMS fails, the error is logged and the code is printed in the
+terminal, so you can still read it out. Your mobile operator may limit how many SMS a SIM
+can send per day; a few dozen logins a day is fine.
 
 To open it on a phone on the same Wi-Fi, start the server with
 `uvicorn app.main:app --host 0.0.0.0 --port 8000` and open `http://<computer's IP>:8000/app/`.
@@ -138,7 +161,6 @@ Existing database: run `db/migrations/003_ai.sql` once.
 ## What is not here yet
 
 - Medicine reminders sent to the phone (the app shows today's doses, but does not notify).
-- SMS delivery of login codes (printed in the terminal for now).
 - Real security for the doctor side. Two shared keys are a start, not enough for real patient
   data. Add doctor logins, HTTPS only, key rotation, backups and encrypted storage. Check the
   data-protection and medical-record rules that apply to the clinic before storing real

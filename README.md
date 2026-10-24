@@ -20,7 +20,7 @@ prescription photo. The doctor keeps control of every medical decision.
 - Questions: shows only answers the doctor approved. **AI** matches a question in the parent's own words to an approved answer; anything else goes to the doctor.
 - **AI:** photo of a prescription slip. Medicines are read from it and sent to the doctor to approve.
 - "Seizure happening now" screen with first aid and a 1122 call button.
-- Phone number + one-time code login.
+- Phone number + one-time code login (code sent by SMS from the clinic's Android phone).
 
 **Doctor dashboard** (Next.js)
 - Patient list, children with unseen red flags first.
@@ -112,8 +112,10 @@ copy .env.local.example .env.local                   # same DOCTOR_API_KEY as th
 npm run dev                                          # http://localhost:3000
 ```
 
-On Windows, copy `run-backend.example.bat` to `run-backend.bat`, fill in your values, and
-double-click `start.bat` to start everything. Details: [`backend/README.md`](backend/README.md),
+On Windows, copy `run-backend.example.bat` to `run-backend.bat` and fill in your values.
+Then double-click `setup.bat` once (it installs the Python and Node packages, creates the
+database and tables, writes `dashboard/.env.local`, and can register your phone number as a
+demo parent), and `start.bat` every time after that to start everything. Details: [`backend/README.md`](backend/README.md),
 [`dashboard/README.md`](dashboard/README.md).
 
 Tests (need a throwaway database whose name ends in `_test`):
@@ -127,7 +129,7 @@ pytest
 
 ## Limits (what a real deployment would still need)
 
-- Login codes are printed in the server terminal; a real SMS/WhatsApp sender is needed.
+- Login codes go by SMS from the clinic's own Android phone (free, see [`backend/README.md`](backend/README.md#login-codes-by-sms-free)); that phone must stay on. A paid SMS or WhatsApp service would be more reliable at scale.
 - The doctor side uses a shared API key, not individual logins.
 - No hosting, HTTPS, backups or encryption at rest.
 - On Gemini's free tier, Google may use the data to improve its products, so only demo data should be sent. Real patients would need a paid plan with a data agreement and the clinic's consent.

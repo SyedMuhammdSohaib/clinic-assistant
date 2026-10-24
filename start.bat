@@ -13,6 +13,11 @@ if not exist "%~dp0run-backend.bat" (
   exit /b 1
 )
 
+rem PGBIN not found: assume PostgreSQL runs as a Windows service and go on.
+if not exist "%PGBIN%\pg_isready.exe" (
+  echo PostgreSQL folder nahi mila, maan rahe hain ke database service ki tarah chal raha hai.
+  goto dbready
+)
 "%PGBIN%\pg_isready" -q -h localhost -p 5432
 if not errorlevel 1 goto dbready
 
