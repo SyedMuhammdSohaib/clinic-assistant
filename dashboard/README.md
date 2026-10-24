@@ -21,6 +21,11 @@ npm run dev
 
 `DOCTOR_API_KEY` in `.env.local` must match the backend's key.
 
+`npm run dev` is for working on the dashboard's code (live reload). For everyday use, on
+Windows `run-dashboard.bat` (or `start.bat`) runs it in production mode instead: it builds
+once (`npm run build`), rebuilds only after the code changes, and serves with `npm run start`.
+Dev mode's cache tends to break after a `git pull`; production mode does not.
+
 ## Check it builds
 
 ```

@@ -49,7 +49,15 @@ goto waitdb
 echo Database chal raha hai.
 start "Clinic backend" cmd /k "%~dp0run-backend.bat"
 start "Clinic dashboard" cmd /k "%~dp0run-dashboard.bat"
-echo Servers start ho rahe hain, 15 second intezar karein...
-timeout /t 15 /nobreak >nul
+echo Servers start ho rahe hain. Naye code ke baad dashboard banne mein 1-3 minute lagte hain...
+rem Open the pages once the dashboard answers (curl comes with Windows 10 and 11), at most 5 minutes.
+set /a waited=0
+:waitweb
+timeout /t 5 /nobreak >nul
+set /a waited+=5
+curl -s -o nul http://localhost:3000 && goto webready
+if %waited% lss 300 goto waitweb
+echo Dashboard 5 minute mein tayyar nahi hua. "Clinic dashboard" window mein error dekhein.
+:webready
 start "" "http://127.0.0.1:8000/app/"
 start "" "http://localhost:3000"

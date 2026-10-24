@@ -115,7 +115,8 @@ npm run dev                                          # http://localhost:3000
 On Windows, copy `run-backend.example.bat` to `run-backend.bat` and fill in your values.
 Then double-click `setup.bat` once (it installs the Python and Node packages, creates the
 database and tables, writes `dashboard/.env.local`, and can register your phone number as a
-demo parent), and `start.bat` every time after that to start everything. Details: [`backend/README.md`](backend/README.md),
+demo parent), and `start.bat` every time after that to start everything. The dashboard runs in
+production mode; after a `git pull` its first start takes 1-3 minutes to rebuild. Details: [`backend/README.md`](backend/README.md),
 [`dashboard/README.md`](dashboard/README.md).
 
 Tests (need a throwaway database whose name ends in `_test`):
