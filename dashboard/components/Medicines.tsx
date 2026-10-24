@@ -1,5 +1,5 @@
 import { StatusBadge, VerifiedBadge } from "@/components/Badge";
-import { fmtDateTime, fmtDay, fmtNum, num, timesPerDayText } from "@/lib/format";
+import { clinicToday, fmtDateTime, fmtDay, fmtNum, num, timesPerDayText } from "@/lib/format";
 import type { Medication, TimelineRow } from "@/lib/types";
 
 type Action = (formData: FormData) => Promise<void>;
@@ -66,7 +66,7 @@ export function MedicineTable({ meds, patientId, changeAction }: { meds: Medicat
     <section className="card stack-md" aria-label="Medicines">
       <h2>Current medicines</h2>
       {current.length === 0 ? (
-        <p className="muted">No current medicines. Add one from the API docs page (POST /patients/&#123;id&#125;/medications).</p>
+        <p className="muted">No current medicines. Add one with the form below.</p>
       ) : (
         <ul className="med-list">
           {current.map((m) => (
@@ -132,6 +132,50 @@ export function EventList({ title, rows, empty }: { title: string; rows: Timelin
           ))}
         </ul>
       )}
+    </section>
+  );
+}
+
+const UNITS = ["mg", "ml", "tablet", "drops", "sachet", "puff"];
+const ROUTES = ["oral", "rectal", "nasal", "IV", "IM", "skin"];
+
+export function AddMedicineForm({ patientId, action }: { patientId: string; action: Action }) {
+  const today = clinicToday();
+  return (
+    <section className="card stack-sm" aria-label="Add a medicine">
+      <h2>Add a medicine</h2>
+      <p className="muted small">It shows in the parent app&apos;s list of today&apos;s doses straight away.</p>
+      <form action={action} className="form-grid">
+        <input type="hidden" name="patient_id" value={patientId} />
+        <label htmlFor="add-drug">Medicine name</label>
+        <input id="add-drug" name="drug_name" type="text" required maxLength={200} placeholder="e.g. Levetiracetam" />
+        <label htmlFor="add-dose">Dose each time</label>
+        <input id="add-dose" name="dose_amount" type="number" required step="0.01" min="0.01" inputMode="decimal" />
+        <label htmlFor="add-unit">Unit</label>
+        <select id="add-unit" name="dose_unit" required defaultValue="ml">
+          {UNITS.map((u) => (
+            <option key={u} value={u}>{u}</option>
+          ))}
+        </select>
+        <label htmlFor="add-times">Times a day</label>
+        <input id="add-times" name="times_per_day" type="number" required min="1" max="12" step="1" defaultValue="2" />
+        <label htmlFor="add-dose-times">Dose times (optional)</label>
+        <input id="add-dose-times" name="dose_times" type="text" placeholder="08:00, 20:00" />
+        <span className="muted small">Empty: spread between 8 am and 10 pm.</span>
+        <label htmlFor="add-route">How it is given</label>
+        <select id="add-route" name="route" defaultValue="oral">
+          {ROUTES.map((r) => (
+            <option key={r} value={r}>{r}</option>
+          ))}
+        </select>
+        <label htmlFor="add-start">Start date</label>
+        <input id="add-start" name="started_on" type="date" required defaultValue={today} />
+        <label htmlFor="add-reason">Reason (optional)</label>
+        <input id="add-reason" name="reason" type="text" maxLength={500} />
+        <div className="form-actions">
+          <button type="submit" className="btn">Add medicine</button>
+        </div>
+      </form>
     </section>
   );
 }

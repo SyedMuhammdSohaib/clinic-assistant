@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { addPatient } from "@/app/actions";
 import { apiGet } from "@/lib/api";
+import { clinicToday } from "@/lib/format";
 import type { Doctor } from "@/lib/types";
 
 type Search = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -9,7 +10,7 @@ export default async function NewPatientPage({ searchParams }: { searchParams: S
   const query = await searchParams;
   const error = typeof query.error === "string" ? query.error : null;
   const doctors = await apiGet<Doctor[]>("/doctors");
-  const today = new Date().toISOString().slice(0, 10);
+  const today = clinicToday();
 
   return (
     <div className="stack-lg">

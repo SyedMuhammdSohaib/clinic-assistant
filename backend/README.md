@@ -134,6 +134,18 @@ If the phone is off or the SMS fails, the error is logged and the code is printe
 terminal, so you can still read it out. Your mobile operator may limit how many SMS a SIM
 can send per day; a few dozen logins a day is fine.
 
+### SMS notices
+
+The same phone also sends two kinds of notices, in the background so a slow phone never
+holds up the app. Without SMS set up they are printed in the terminal.
+
+- **Red flag → doctor.** When a logged seizure matches a red-flag rule, the doctor gets
+  `RED FLAG: <child> (ID <short id>). <rule>. Please check the clinic dashboard.` It goes to
+  the doctor's saved phone number, or to `DOCTOR_ALERT_PHONE` when none is saved.
+- **Answer → parent.** When the doctor answers a parent's question, the parent who asked
+  gets a short message in the child's language (Urdu, Roman Urdu or English), plus
+  `PARENT_APP_URL` if it is set.
+
 To open it on a phone on the same Wi-Fi, start the server with
 `uvicorn app.main:app --host 0.0.0.0 --port 8000` and open `http://<computer's IP>:8000/app/`.
 That is for testing only: real parents need it online over HTTPS.

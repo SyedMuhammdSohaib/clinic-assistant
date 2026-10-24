@@ -60,3 +60,15 @@ def client(database):
         yield test_client
     with psycopg.connect(database, autocommit=True) as conn:
         conn.execute("TRUNCATE doctors, guardians, login_codes, audit_log RESTART IDENTITY CASCADE")
+
+
+@pytest.fixture(autouse=True)
+def sms_notices(monkeypatch):
+    """Every SMS notice (red flags, answered questions) lands here instead of a phone."""
+    from app import notifications
+
+    sent = []
+    monkeypatch.setattr(notifications, "notify", lambda phone, text: sent.append((phone, text)))
+    monkeypatch.delenv("DOCTOR_ALERT_PHONE", raising=False)
+    monkeypatch.delenv("PARENT_APP_URL", raising=False)
+    return sent

@@ -5,6 +5,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from app import notifications
 from app import queries as q
 from app.auth import require_doctor
 from app.clock import clinic_tz
@@ -111,6 +112,7 @@ def answer_question(question_id: UUID, body: AnswerIn, conn=Depends(get_conn)):
     row = one_or_404(conn, q.ANSWER_QUESTION, {"id": question_id, "answer": body.answer}, "Question")
     audit(conn, "doctor", "answer", "parent_questions", question_id)
     conn.commit()
+    notifications.tell_parent_answered(conn, question_id)
     return row
 
 

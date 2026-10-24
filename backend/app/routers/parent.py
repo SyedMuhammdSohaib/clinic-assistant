@@ -8,7 +8,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 
 from app import queries as q
-from app import services
+from app import notifications, services
 from app.clock import clinic_today, clinic_tz
 from app.common import ensure_patient_and_guardian
 from app.db import get_conn
@@ -163,6 +163,7 @@ def log_seizure(patient_id: UUID, body: SeizureFields, parent: dict = Depends(re
     _child(conn, parent, patient_id)
     result = services.log_seizure(conn, patient_id, parent["id"], body)
     conn.commit()
+    notifications.alert_doctor(conn, patient_id, result["red_flags"])
     return result
 
 
