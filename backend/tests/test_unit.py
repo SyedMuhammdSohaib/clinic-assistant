@@ -242,3 +242,13 @@ def test_login_code_is_printed_when_gateway_url_is_malformed(monkeypatch, capsys
     monkeypatch.setenv("SMS_GATEWAY_URL", "192.168.10.10:8080/message")  # http:// missing
     parent_auth.send_code("923001234567", "333444")
     assert "333444" in capsys.readouterr().out
+
+
+def test_phone_on_local_wifi_is_reached_without_the_computers_proxy(gateway, monkeypatch, capsys):
+    monkeypatch.setenv("HTTP_PROXY", "http://proxy.invalid:3128")
+    monkeypatch.setenv("http_proxy", "http://proxy.invalid:3128")
+    monkeypatch.delenv("NO_PROXY", raising=False)
+    monkeypatch.delenv("no_proxy", raising=False)
+    parent_auth.send_code("923001234567", "555666")
+    assert len(gateway.requests) == 1
+    assert "555666" not in capsys.readouterr().out

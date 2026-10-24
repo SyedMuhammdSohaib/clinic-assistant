@@ -7,11 +7,13 @@ phone cannot be reached, the code is printed in the backend terminal instead.
 """
 import base64
 import hashlib
+import ipaddress
 import json
 import logging
 import os
 import secrets
 import urllib.error
+import urllib.parse
 import urllib.request
 
 from fastapi import Depends, HTTPException, Security
@@ -48,6 +50,16 @@ def sms_text(code: str) -> str:
     return f"Clinic login code: {code}. Valid for 10 minutes. Do not share it with anyone."
 
 
+def _opener_for(url: str) -> urllib.request.OpenerDirector:
+    """A phone on the clinic's Wi-Fi is reached directly, never through a proxy set on the computer."""
+    host = urllib.parse.urlsplit(url).hostname or ""
+    try:
+        local = ipaddress.ip_address(host).is_private
+    except ValueError:
+        local = host == "localhost"
+    return urllib.request.build_opener(urllib.request.ProxyHandler({})) if local else urllib.request.build_opener()
+
+
 def send_sms(phone: str, text: str) -> None:
     """Send one SMS through the SMS Gateway for Android app. Raises OSError on failure."""
     url = os.environ["SMS_GATEWAY_URL"]
@@ -61,7 +73,7 @@ def send_sms(phone: str, text: str) -> None:
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with _opener_for(url).open(req, timeout=15) as resp:
             resp.read()
     except urllib.error.HTTPError as e:
         raise OSError(f"SMS gateway error {e.code}: {e.read().decode(errors='replace')[:300]}") from e
